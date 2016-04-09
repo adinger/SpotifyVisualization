@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <style>
+
+  circle,
+  path {
+    cursor: pointer;
+  }
+
+  circle {
+    fill: none;
+    pointer-events: all;
+  }
+
+  #chart { 
+    height: 360px; 
+    position: relative;
+    width: 360px;
+  }  
+
+  .tooltip {
+    background: #eee;
+    box-shadow: 0 0 5px #999999;
+    color: #333;
+    display: none;
+    font-size: 12px;
+    left: 130px;
+    padding: 10px;
+    position: absolute;
+    text-align: center;
+    top: 95px;
+    width: 150px;
+    z-index: 10;
+  }
+
+  </style>
+</head>
+<body>
+
+<div id="chart"></div>
+<script src="d3.js"></script>
+<script src="bilevelPartition.js"></script>
+
+</body>

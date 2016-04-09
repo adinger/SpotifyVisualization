@@ -1,0 +1,122 @@
+{
+  "name": "music",
+  "children": [
+    {
+      "type": "genre",
+      "name": "pop",
+      "children": [
+        {
+          "type":"bpmRange",
+          "name":"100-110",
+          "children": [
+            {"type": "song", "name": "SongA", "bpm": 100},
+            {"type": "song", "name": "SongB", "bpm": 105},
+            {"type": "song", "name": "SongC", "bpm": 109}
+          ]
+        },
+        {
+          "type":"bpmRange",
+          "name": "110-120",
+          "children": [
+            {"type": "song", "name": "SongD", "bpm": 118},
+            {"type": "song", "name": "SongE", "bpm": 114},
+            {"type": "song", "name": "SongF", "bpm": 115}
+          ]
+        },
+        {
+          "type":"bpmRange",
+          "name": "200-210",
+          "children": [
+            {"type": "song", "name": "SongD", "bpm": 200},
+            {"type": "song", "name": "SongE", "bpm": 205},
+            {"type": "song", "name": "SongF", "bpm": 210}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "genre",
+      "name": "rock",
+      "children": [
+        {
+          "type":"bpmRange",
+          "name":"300-310",
+          "children": [
+            {"type": "song", "name": "SongA", "bpm": 302},
+            {"type": "song", "name": "SongB", "bpm": 305},
+            {"type": "song", "name": "SongC", "bpm": 308}
+          ]
+        },
+        {
+          "type":"bpmRange",
+          "name": "310-320",
+          "children": [
+            {"type": "song", "name": "SongD", "bpm": 318},
+            {"type": "song", "name": "SongE", "bpm": 314},
+            {"type": "song", "name": "SongF", "bpm": 315}
+          ]
+        },
+        {
+          "type":"bpmRange",
+          "name": "320-330",
+          "children": [
+            {"type": "song", "name": "SongD", "bpm": 328},
+            {"type": "song", "name": "SongE", "bpm": 324},
+            {"type": "song", "name": "SongF", "bpm": 325}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "genre",
+      "name": "ballad",
+      "children": [
+        {
+          "type":"bpmRange",
+          "name":"100-110",
+          "children": [
+            {"type": "song", "name": "SongA", "bpm": 102},
+            {"type": "song", "name": "SongB", "bpm": 105},
+            {"type": "song", "name": "SongC", "bpm": 108}
+          ]
+        },
+        {
+          "type":"bpmRange",
+          "name": "110-120",
+          "children": [
+            {"type": "song", "name": "SongD", "bpm": 118},
+            {"type": "song", "name": "SongE", "bpm": 114},
+            {"type": "song", "name": "SongF", "bpm": 115}
+          ]
+        },
+        {
+          "type":"bpmRange",
+          "name": "120-130",
+          "children": [
+            {"type": "song", "name": "SongD", "bpm": 118},
+            {"type": "song", "name": "SongE", "bpm": 114},
+            {"type": "song", "name": "SongF", "bpm": 115}
+          ]
+        },
+        {
+          "type":"bpmRange",
+          "name": "130-140",
+          "children": [
+            {"type": "song", "name": "SongD", "bpm": 138},
+            {"type": "song", "name": "SongE", "bpm": 134},
+            {"type": "song", "name": "SongF", "bpm": 135}
+          ]
+        },
+        {
+          "type":"bpmRange",
+          "name": "140-150",
+          "children": [
+            {"type": "song", "name": "SongD", "bpm": 148},
+            {"type": "song", "name": "SongE", "bpm": 144},
+            {"type": "song", "name": "SongF", "bpm": 145}
+          ]
+        }
+      ]
+    }
+  ]
+}

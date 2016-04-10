@@ -1,35 +1,26 @@
 // CHANGE THIS INPUT FILE WHEN THE RADIO BUTTON FOR THE PLAYLIST IS CLICKED (MUST BE ON PUBLIC URL):
-var inputFile = "https://raw.githubusercontent.com/adinger/SpotifyVisualization/master/playlistA.json";   
-
+//var inputFile = "https://raw.githubusercontent.com/adinger/SpotifyVisualization/master/playlistA.json";   
+var inputFile = "playlistA.json";
 $.when(
     $.getJSON(inputFile)
 ).done(function(jsonObject) {
-
+    var lowestBPM = getLowestBpmInPlaylist(jsonObject);
     var highestBPM = getHighestBpmInPlaylist(jsonObject); // helps us set the highest color luminance
 
     var margin = {top: 350, right: 480, bottom: 350, left: 480},
         radius = Math.min(margin.top, margin.right, margin.bottom, margin.left) - 10;
 
-    function getHighestBPM(inputFile) {
-      var c = d3.json(inputFile, function (error, root) {
-        return root.name;
-        //return d3.max(root.children);
-      });
-      alert(c);
-      return c;
-    }
-
     console.log(highestBPM);
 
     /*************** functions to adjust arc colors ****************/
-    var hue = d3.scale.category10();  // gives us 10 colors
+    var hue = d3.scale.category20();  // gives us 10 colors
 
     // maps an input domain to an output range representing luminance levels
     // See LAB Color Space: https://en.wikipedia.org/wiki/Lab_color_space
-    var luminance = d3.scale.sqrt()   
-        .domain([0, highestBPM])
+    var luminance = d3.scale.linear()   
+        .domain([lowestBPM, highestBPM])
         .clamp(true)
-        .range([140, 70]);
+        .range([140,70]);
 
     function fill(d) {  // calculates the fill color for each arc
       var parent = d;
@@ -58,16 +49,26 @@ $.when(
         .innerRadius(function(d) { return radius / 3 * d.depth; })
         .outerRadius(function(d) { return radius / 3 * (d.depth + 1) - 1; });
 
-    /********** create label that shows when hovering over the arc *********/
+    /********** create infowindows that shows when hovering over the arc *********/
+    var centerTooltip = d3.select('#chart')
+      .append('div')
+      .attr('class', 'centerTooltip');
     var tooltip = d3.select('#chart')
       .append('div')
       .attr('class', 'tooltip');
+    
+                  
+    centerTooltip.append('div') 
+      .attr('class', 'label');
+
+    centerTooltip.select('.label').html('Playlist: <b>'+inputFile+'</b>');
                   
     tooltip.append('div') 
       .attr('class', 'label');
     tooltip.append('div')
       .attr('class', 'info');
-    /*********************** end label ************************/
+
+    /*********************** end infowindows ************************/
 
     d3.json(inputFile, function(error, root) {
       function calculateLuminance(d) {
@@ -128,6 +129,7 @@ $.when(
           .on("click", zoomIn);
 
       addMouseListeners(path);    // reattach mouse listeners for arcs
+      //addCenterMouseListeners(path);
 
       function hasOwnProperty(obj, prop) {
           var proto = obj.__proto__ || obj.constructor.prototype;
@@ -141,15 +143,30 @@ $.when(
         if (p.depth > 1) p = p.parent;
         if (!p.children) return;
         zoom(p, p);
+        console.log('zoomin');
+        setCenterTooltip(p);
       }
 
       function zoomOut(p) {
         if (!p.parent) return;
         zoom(p.parent, p);
+        console.log('zoomout');
+        setCenterTooltip(p.parent);
+      }
+
+      function setCenterTooltip(currentArc) {
+        if (currentArc.name === 'music') {
+          centerTooltip.select('.label').html('Playlist: <b>'+inputFile+'</b>');
+        } if (currentArc.type === 'genre') {
+          centerTooltip.select('.label').html('Current Genre: <b>'+capitalizeFirstLetter(currentArc.name)+'</b>');
+        } else if (currentArc.type === 'bpmRange') {
+          centerTooltip.select('.label').html('Current BPM Range: <b>'+currentArc.name+'</b>');
+        }
       }
 
       // Zoom to the specified new root.
       function zoom(root, p) {
+        
         if (document.documentElement.__transition__) return;
 
         // Rescale outside angles to match the new layout.
@@ -198,22 +215,33 @@ $.when(
         });
 
         addMouseListeners(path);
+        //addCenterMouseListeners(path);
       }
     });
+
+    function addCenterMouseListeners(path) {
+      path.on('click', function(d) {
+        if (d.type === 'genre') {
+          centerTooltip.select('.label').html('Showing BPMs under "'+d.name+'" genre');
+        } else if (d.type === 'bpmRange') {
+          centerTooltip.select('.label').html('Showing songs under "'+d.name+'" BPM range');
+        }
+      });
+    }
 
 
     // adds the mouseover, mouseout, and mousemove events for each arc
     function addMouseListeners(path) {
       path.on('mouseover', function(d) {
         if (d.type === 'genre') {
-          tooltip.select('.label').html('Genre: '+capitalizeFirstLetter(d.name));
+          tooltip.select('.label').html('Genre: <b>'+capitalizeFirstLetter(d.name)+'</b>');
           tooltip.select('.info').html('');
         } else if (d.type === 'song') {
-          tooltip.select('.label').html('Song: '+d.name);
-          tooltip.select('.info').html('BPM: '+d.bpm);
+          tooltip.select('.label').html('Song: <b>'+d.name+'</b>');
+          tooltip.select('.info').html('BPM: <b>'+d.bpm+'</b>');
         } else if (d.type === 'bpmRange') {
-          tooltip.select('.label').html('BPM Range: '+d.name);
-          tooltip.select('.info').html('Song Count: '+d._children.length);
+          tooltip.select('.label').html('BPM Range: <b>'+d.name+'</b>');
+          tooltip.select('.info').html('Song Count: <b>'+d._children.length+'</b>');
         }
         tooltip.style('display', 'block'); 
       });
@@ -222,11 +250,11 @@ $.when(
         tooltip.style('display', 'none');
       });  
 
-       
-      path.on('mousemove', function(d) {
+      path.on('mousemove', function(d) {  // makes the infowindow follow the mouse around
         tooltip.style('top', (d3.event.pageY + 10) + 'px')
           .style('left', (d3.event.pageX + 10) + 'px');
       });
+      
     }
 
     function key(d) {
@@ -255,6 +283,25 @@ $.when(
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    // gets the LOWEST BPM in the whole playlist. helps to set the maximum color luminance.
+    function getLowestBpmInPlaylist(jsonObject) {
+      var ret;
+      var root = jsonObject;
+      ret = d3.min(root.children, function(genreObject) {
+        var minGenreBpm = d3.min(genreObject.children, function(bpmRangeObject) {
+          //console.log(bpmRangeObject);
+          var songs = bpmRangeObject.children;
+          var bpmArray = [];
+          for (var i=0; i < songs.length ; ++i)
+              bpmArray.push(songs[i]["bpm"]);
+          return d3.min(bpmArray);
+        });
+        //console.log("minGenreBpm: "+minGenreBpm);
+        return minGenreBpm;
+      });
+      return ret;
+    }
+
     // gets the highest BPM in the whole playlist. helps to set the maximum color luminance.
     function getHighestBpmInPlaylist(jsonObject) {
       var ret;
@@ -268,10 +315,9 @@ $.when(
               bpmArray.push(songs[i]["bpm"]);
           return d3.max(bpmArray);
         });
-        console.log("maxGenreBpm: "+maxGenreBpm);
+        //console.log("maxGenreBpm: "+maxGenreBpm);
         return maxGenreBpm;
-      });  
-      console.log('ret:'+ret);
+      });
       return ret;
     }
 

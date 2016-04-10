@@ -1,14 +1,14 @@
 // CHANGE THIS INPUT FILE WHEN THE RADIO BUTTON FOR THE PLAYLIST IS CLICKED (MUST BE ON PUBLIC URL):
 //var inputFile = "https://raw.githubusercontent.com/adinger/SpotifyVisualization/master/playlistA.json";   
-var inputFile = "playlistA.json";
+var inputFile = "vivianPlaylist.json";
 
 // Adjust the genres and colors. Make sure # genres = # colors!
 var genreList = ["rock","r&b","punk","hip hop","grunge",
                 "folk","christmas","celtic","ambient","soundtrack",
                 "soul","classical","blues","contemporary"];
-var colorList = ["#874b5a","#74a8ce","#6f5b4c","#d1aa76","#baa644",
-                "#622f7e","#e0d16d","#1d7446", "#73ae88","#2c6a9f",
-                "#d194a0","#384a99","#6a86b9","9f6ea2"];
+var colorList = ["#874b5a","#d194a0","#6f5b4c","#d1aa76","#baa644",
+                "#e0d16d","#00aaa5", "#b2e5e4","#2c6a9f","#74a8ce",
+                "#384a99","#6a86b9","#622f7e","9f6ea2"];
 
 
 $.when(
@@ -20,7 +20,8 @@ $.when(
     var margin = {top: 350, right: 480, bottom: 350, left: 480},
         radius = Math.min(margin.top, margin.right, margin.bottom, margin.left) - 10;
 
-    console.log(highestBPM);
+    console.log('lowestBPM: '+lowestBPM);
+    console.log('highestBPM: '+highestBPM);
 
     /*************** functions to adjust arc colors ****************/
     //var hue = d3.scale.category20();  // gives us 10 colors
@@ -33,7 +34,7 @@ $.when(
     var luminance = d3.scale.linear()   
         .domain([lowestBPM, highestBPM])
         .clamp(true)
-        .range([140,70]); // higher = white, lower = black
+        .range([110,70]); // higher = white, lower = black
 
     function fill(d) {  // calculates the fill color for each arc
       var parent = d;
@@ -100,7 +101,7 @@ $.when(
               var songs = bpmRangeObject.children;
               var bpmArray = [];
               for (var i=0; i < songs.length ; ++i)
-                  bpmArray.push(songs[i]["bpm"]);
+                  bpmArray.push(Math.round(songs[i]["bpm"]));
               return d3.max(bpmArray);
             });
           }
@@ -296,42 +297,62 @@ $.when(
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    // gets the LOWEST BPM in the whole playlist. helps to set the maximum color luminance.
+    // gets the LOWEST BPM in the whole playlist. helps to set the minimum color luminance.
     function getLowestBpmInPlaylist(jsonObject) {
       var ret;
       var root = jsonObject;
-      ret = d3.min(root.children, function(genreObject) {
-        var minGenreBpm = d3.min(genreObject.children, function(bpmRangeObject) {
-          //console.log(bpmRangeObject);
+      var minBpm = Number.MAX_VALUE;
+
+      genres = root.children;
+
+      for (var k=0; k < genres.length; ++k) {
+        genreObject = genres[k]
+        var bpmRanges = genreObject.children;
+
+        for (var i=0; i < bpmRanges.length ; ++i) {
+          var bpmRangeObject = bpmRanges[i];
           var songs = bpmRangeObject.children;
-          var bpmArray = [];
-          for (var i=0; i < songs.length ; ++i)
-              bpmArray.push(songs[i]["bpm"]);
-          return d3.min(bpmArray);
-        });
-        //console.log("minGenreBpm: "+minGenreBpm);
-        return minGenreBpm;
-      });
-      return ret;
+
+          for (var j=0; j < songs.length ; ++j) {
+              var songObject = songs[j];
+              var bpm = Math.round(songObject['bpm']);
+              if (bpm < minBpm) 
+                minBpm = bpm;
+              console.log('song bpm: '+bpm+', minBpm: '+minBpm);
+          }
+        }
+      }
+
+      return minBpm;
     }
 
     // gets the highest BPM in the whole playlist. helps to set the maximum color luminance.
     function getHighestBpmInPlaylist(jsonObject) {
       var ret;
       var root = jsonObject;
-      ret = d3.max(root.children, function(genreObject) {
-        var maxGenreBpm = d3.max(genreObject.children, function(bpmRangeObject) {
-          //console.log(bpmRangeObject);
+      var maxBpm = 0;
+
+      genres = root.children;
+
+      for (var k=0; k < genres.length; ++k) {
+        genreObject = genres[k]
+        var bpmRanges = genreObject.children;
+
+        for (var i=0; i < bpmRanges.length ; ++i) {
+          var bpmRangeObject = bpmRanges[i];
           var songs = bpmRangeObject.children;
-          var bpmArray = [];
-          for (var i=0; i < songs.length ; ++i)
-              bpmArray.push(songs[i]["bpm"]);
-          return d3.max(bpmArray);
-        });
-        //console.log("maxGenreBpm: "+maxGenreBpm);
-        return maxGenreBpm;
-      });
-      return ret;
+
+          for (var j=0; j < songs.length ; ++j) {
+              var songObject = songs[j];
+              var bpm = Math.round(songObject['bpm']);
+              if (bpm > maxBpm) 
+                maxBpm = bpm;
+              console.log('song bpm: '+bpm+', maxBpm: '+maxBpm);
+          }
+        }
+      }
+
+      return maxBpm;
     }
 
 });

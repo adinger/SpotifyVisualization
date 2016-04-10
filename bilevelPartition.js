@@ -1,6 +1,16 @@
 // CHANGE THIS INPUT FILE WHEN THE RADIO BUTTON FOR THE PLAYLIST IS CLICKED (MUST BE ON PUBLIC URL):
 //var inputFile = "https://raw.githubusercontent.com/adinger/SpotifyVisualization/master/playlistA.json";   
 var inputFile = "playlistA.json";
+
+// Adjust the genres and colors. Make sure # genres = # colors!
+var genreList = ["rock","r&b","punk","hip hop","grunge",
+                "folk","christmas","celtic","ambient","soundtrack",
+                "soul","classical","blues","contemporary"];
+var colorList = ["#874b5a","#74a8ce","#6f5b4c","#d1aa76","#baa644",
+                "#622f7e","#e0d16d","#1d7446", "#73ae88","#2c6a9f",
+                "#d194a0","#384a99","#6a86b9","9f6ea2"];
+
+
 $.when(
     $.getJSON(inputFile)
 ).done(function(jsonObject) {
@@ -13,14 +23,17 @@ $.when(
     console.log(highestBPM);
 
     /*************** functions to adjust arc colors ****************/
-    var hue = d3.scale.category20();  // gives us 10 colors
+    //var hue = d3.scale.category20();  // gives us 10 colors
+    var hue = d3.scale.ordinal()
+      .domain(genreList)
+      .range(colorList);
 
     // maps an input domain to an output range representing luminance levels
     // See LAB Color Space: https://en.wikipedia.org/wiki/Lab_color_space
     var luminance = d3.scale.linear()   
         .domain([lowestBPM, highestBPM])
         .clamp(true)
-        .range([140,70]);
+        .range([140,70]); // higher = white, lower = black
 
     function fill(d) {  // calculates the fill color for each arc
       var parent = d;

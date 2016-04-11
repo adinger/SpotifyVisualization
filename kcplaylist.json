@@ -1,0 +1,140 @@
+{
+    "name": "music",
+    "children": [
+        {
+            "name": "crunk",
+            "children": [
+                {
+                    "name": "160-170",
+                    "children": [
+                        {
+                            "name": "Top Back Remix (feat. Young Jeezy, Young Dro, Big Kuntry King, B.G.)-T.I.",
+                            "bpm": "160",
+                            "type": "song"
+                        }
+                    ],
+                    "type": "bpmRange"
+                },
+                {
+                    "name": "70-80",
+                    "children": [
+                        {
+                            "name": "Do Ya Bad - Amended-Yung Joc",
+                            "bpm": "74",
+                            "type": "song"
+                        },
+                        {
+                            "name": "We In This Thing-Young Dro",
+                            "bpm": "74",
+                            "type": "song"
+                        },
+                        {
+                            "name": "Ain\u2019t I (Remix)-Young Dro",
+                            "bpm": "76",
+                            "type": "song"
+                        },
+                        {
+                            "name": "Shoulder Lean-Young Dro",
+                            "bpm": "76",
+                            "type": "song"
+                        }
+                    ],
+                    "type": "bpmRange"
+                }
+            ],
+            "type": "genre"
+        },
+        {
+            "name": "dirty south rap",
+            "children": [
+                {
+                    "name": "80-90",
+                    "children": [
+                        {
+                            "name": "The Boss-Rick Ross",
+                            "bpm": "86",
+                            "type": "song"
+                        }
+                    ],
+                    "type": "bpmRange"
+                },
+                {
+                    "name": "90-100",
+                    "children": [
+                        {
+                            "name": "Its On - Feat. NOAH, JIGGOLO-Rick Ross",
+                            "bpm": "90",
+                            "type": "song"
+                        },
+                        {
+                            "name": "Magnificent-Rick Ross",
+                            "bpm": "91",
+                            "type": "song"
+                        },
+                        {
+                            "name": "Tears Of Joy-Rick Ross",
+                            "bpm": "93",
+                            "type": "song"
+                        },
+                        {
+                            "name": "We Shinin'-Rick Ross",
+                            "bpm": "93",
+                            "type": "song"
+                        }
+                    ],
+                    "type": "bpmRange"
+                },
+                {
+                    "name": "140-150",
+                    "children": [
+                        {
+                            "name": "Lay Back-Rick Ross",
+                            "bpm": "143",
+                            "type": "song"
+                        },
+                        {
+                            "name": "9 Piece-Rick Ross",
+                            "bpm": "145",
+                            "type": "song"
+                        }
+                    ],
+                    "type": "bpmRange"
+                },
+                {
+                    "name": "70-80",
+                    "children": [
+                        {
+                            "name": "Maybach Music III-Rick Ross",
+                            "bpm": "70",
+                            "type": "song"
+                        }
+                    ],
+                    "type": "bpmRange"
+                },
+                {
+                    "name": "170-180",
+                    "children": [
+                        {
+                            "name": "Been-Rick Ross",
+                            "bpm": "170",
+                            "type": "song"
+                        }
+                    ],
+                    "type": "bpmRange"
+                },
+                {
+                    "name": "110-120",
+                    "children": [
+                        {
+                            "name": "Here I Am-Rick Ross",
+                            "bpm": "110",
+                            "type": "song"
+                        }
+                    ],
+                    "type": "bpmRange"
+                }
+            ],
+            "type": "genre"
+        }
+    ]
+}

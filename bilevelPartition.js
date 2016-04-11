@@ -1,21 +1,27 @@
 // CHANGE THIS INPUT FILE WHEN THE RADIO BUTTON FOR THE PLAYLIST IS CLICKED (MUST BE ON PUBLIC URL):
 //var inputFile = "https://raw.githubusercontent.com/adinger/SpotifyVisualization/master/playlistA.json";   
-var inputFile = "vivianPlaylist.json";
+var inputFile = "kcplaylist.json";
+var genreFile = "kcplaylist_genres.json";
 
-// Adjust the genres and colors. Make sure # genres = # colors!
-var genreList = ["rock","r&b","punk","hip hop","grunge",
-                "folk","christmas","celtic","ambient","soundtrack",
-                "soul","classical","blues","contemporary"];
+// Adjust the colors mapping to each genre
 var colorList = ["#874b5a","#d194a0","#6f5b4c","#d1aa76","#baa644",
                 "#e0d16d","#00aaa5", "#b2e5e4","#2c6a9f","#74a8ce",
                 "#384a99","#6a86b9","#622f7e","9f6ea2"];
 
+var genreList = [];/*["rock","r&b","punk","hip hop","grunge",
+                "folk","christmas","celtic","ambient","soundtrack",
+                "soul","classical","blues","contemporary"];*/
 
 $.when(
-    $.getJSON(inputFile)
-).done(function(jsonObject) {
+    $.getJSON(inputFile),
+    $.getJSON(genreFile)
+).done(function (bpmData, genresData) {
+    var jsonObject = JSON.parse(bpmData[2].responseText);
+    var genreListObject = JSON.parse(genresData[2].responseText);
+
+    genreList = genreListObject.genres;
     var lowestBPM = getLowestBpmInPlaylist(jsonObject);
-    var highestBPM = getHighestBpmInPlaylist(jsonObject); // helps us set the highest color luminance
+    var highestBPM = getHighestBpmInPlaylist(jsonObject);
 
     var margin = {top: 350, right: 480, bottom: 350, left: 480},
         radius = Math.min(margin.top, margin.right, margin.bottom, margin.left) - 10;
@@ -24,11 +30,11 @@ $.when(
     console.log('highestBPM: '+highestBPM);
 
     /*************** functions to adjust arc colors ****************/
-    //var hue = d3.scale.category20();  // gives us 10 colors
-    var hue = d3.scale.ordinal()
+    var hue = d3.scale.category20();  // gives us 10 colors
+    /*var hue = d3.scale.ordinal()
       .domain(genreList)
       .range(colorList);
-
+    */
     // maps an input domain to an output range representing luminance levels
     // See LAB Color Space: https://en.wikipedia.org/wiki/Lab_color_space
     var luminance = d3.scale.linear()   
@@ -304,6 +310,7 @@ $.when(
       var minBpm = Number.MAX_VALUE;
 
       genres = root.children;
+      console.log('root.name: '+root.name);
 
       for (var k=0; k < genres.length; ++k) {
         genreObject = genres[k]
